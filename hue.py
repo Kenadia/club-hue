@@ -32,10 +32,10 @@ class Timer(object):
         sleep(0.005)
 
     def wait_beats(self, beats):
-        wait_duration = 60.0 / self.bpm * beats
-        wait_end_time = self.last_start_time + wait_duration
+        wait_end_time = self.last_start_time + (60.0 / self.bpm * beats)
         while time() < wait_end_time:
             self._wait()
+            wait_end_time = self.last_start_time + (60.0 / self.bpm * beats)
         self.last_start_time = time()
 
 

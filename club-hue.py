@@ -1,33 +1,31 @@
-from flask import Flask
+from threading import Thread
+
+from flask import Flask, render_template
 
 from hue import Colors, Context, Dance, Lights, Timer
-
-
-class Dancer(object):
-
-    def __init__(self):
-        timer = Timer(120.0)
-        lights = Lights([1, 2, 3])
-        colors = Colors()
-        self.context = Context(timer, lights, colors)
-        self.dance = Dance(self.context)
-
-    def start(self):
-        self.dance.play()
 
 
 app = Flask(__name__)
 
 
 def main():
-    dancer = Dancer()
-    dancer.start()
+    dancer_thread = Thread(target=start_dance)
+    dancer_thread.daemon = True
+    dancer_thread.start()
     app.run()
+
+
+def start_dance():
+    timer = Timer(120.0)
+    lights = Lights([1, 2, 3])
+    colors = Colors()
+    context = Context(timer, lights, colors)
+    Dance(context).play()
 
 
 @app.route('/')
 def home():
-    return 'It works'
+    return render_template('home.html')
 
 
 if __name__ == "__main__":
