@@ -30,8 +30,8 @@ def home():
 
 @app.route('/bpm/', methods=['PUT'])
 def bpm():
-    new_bpm = request.form['bpm']
-    timer.bpm = new_bpm
+    print 'Changing BPM to ', request.form['bpm']
+    timer.bpm = float(request.form['bpm'])
     return jsonify({})
 
 

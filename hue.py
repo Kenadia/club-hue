@@ -16,6 +16,7 @@ def set_light(light_id, color=None, bri=None, t=0):
         'transitiontime': t
     }
     url = '%slights/%d/state' % (BASE_URL, light_id)
+    print 'SENT', data
     requests.put(url, data=json.dumps(data))
 
 
