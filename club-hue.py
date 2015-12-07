@@ -1,11 +1,15 @@
 from threading import Thread
 
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
 
 from hue import Colors, Context, Dance, Lights, Timer
 
-
 app = Flask(__name__)
+timer = Timer(120.0)
+lights = Lights([1, 2, 3])
+colors = Colors()
+context = Context(timer, lights, colors)
+dance = Dance(context)
 
 
 def main():
@@ -16,16 +20,19 @@ def main():
 
 
 def start_dance():
-    timer = Timer(120.0)
-    lights = Lights([1, 2, 3])
-    colors = Colors()
-    context = Context(timer, lights, colors)
-    Dance(context).play()
+    dance.play()
 
 
 @app.route('/')
 def home():
     return render_template('home.html')
+
+
+@app.route('/bpm/', methods=['PUT'])
+def bpm():
+    new_bpm = request.form['bpm']
+    timer.bpm = new_bpm
+    return jsonify({})
 
 
 if __name__ == "__main__":
